@@ -6,7 +6,7 @@ from http.client import OK
 import dpath
 from . import subject
 
-from openapi_spec_validator import validate_v2_spec
+from openapi_spec_validator import validate_v3_spec
 
 
 def assert_items_equal(x, y):
@@ -60,4 +60,4 @@ def test_host():
 
 
 def test_respects_spec():
-    validate_v2_spec(body)
+    validate_v3_spec(body)
