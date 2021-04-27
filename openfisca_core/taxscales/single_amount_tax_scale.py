@@ -45,19 +45,22 @@ class SingleAmountTaxScale(AmountTaxScaleLike):
     def to_average(self) -> taxscales.LinearAverageRateTaxScale:
         """ Converts this scale to a LinearAverageRateTaxScale.
             Parameter keys change from ('threshold', 'amount') to ('threshold', 'rate').
-
-            Usage notes:
-             - Allows linear interpolation between point on the SingleAmountTaxScale using:
-                `interpolated = self.to_average().calc(tax_base)/tax_base` # must handle ZeroDivisionError
         """
         average_tax_scale = taxscales.LinearAverageRateTaxScale(
             name = self.name,
             option = self.option,
             unit = self.unit,
             )
-
+        
         if self.thresholds:
             for threshold, amount in list(zip(self.thresholds, self.amounts)):
                 average_tax_scale.add_bracket(threshold, amount)
+
+        for threshold, amount in zip(self.thresholds, self.amounts):
+            try:
+                average_tax_scale.add_bracket(threshold, amount/threshold)
+            except ZeroDivisionError:
+                average_tax_scale.add_bracket(threshold, 0)
+            
 
         return average_tax_scale
