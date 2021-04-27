@@ -80,7 +80,9 @@ def test_dispatch_scale_type_on_creation(data):
 
 
 def test_to_average__linear_interpolation():
-    tax_base = numpy.array([-1, 0, 1, 2, 3, 7, 9, 11])
+    tax_base_on_thresholds = numpy.array([0, 2, 4, 6, 8, 10])
+    tax_base_between_thresholds = numpy.array([1, 3, 5, 6.0005, 7, 9.5])
+
     tax_scale = taxscales.SingleAmountTaxScale()
     tax_scale.add_bracket(0, 0)
     tax_scale.add_bracket(2, 10)
@@ -88,14 +90,20 @@ def test_to_average__linear_interpolation():
     tax_scale.add_bracket(6, 60)
     tax_scale.add_bracket(8, 100)
     tax_scale.add_bracket(10, 40)
+    tax_scale.add_bracket(10.000000001, 0)
 
     result = tax_scale.to_average()
-    # assert result.thresholds == [0, 2, 4, 6, 8, 10]
 
-    calc_result = result.calc(tax_base)
-
+    on_thresholds_result = result.calc(tax_base_on_thresholds)
     tools.assert_near(
-        calc_result,
-        [0, 0, 5, 10, 20, 80, 75, 0],
+        on_thresholds_result,
+        [0, 10, 30, 60, 100, 40],
+        absolute_error_margin = 1e-10,
+        )
+
+    between_thresholds_result = result.calc(tax_base_between_thresholds)
+    tools.assert_near(
+        between_thresholds_result,
+        [5, 20, 45, 61, 80, 55],
         absolute_error_margin = 1e-10,
         )
