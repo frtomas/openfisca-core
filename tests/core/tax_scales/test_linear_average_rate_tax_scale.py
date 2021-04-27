@@ -71,6 +71,19 @@ def test_to_dict():
     assert result == {"0": 0.0, "100": 0.1}
 
 
+def test_calc():
+    tax_base = numpy.array([0, 3.5, 6, 7, 9])
+    tax_scale = taxscales.LinearAverageRateTaxScale()
+    tax_scale.add_bracket(0, 0)
+    tax_scale.add_bracket(2, 0.1)
+    tax_scale.add_bracket(4, 0.3)
+    tax_scale.add_bracket(6, 0.7)
+    tax_scale.add_bracket(8, 0.5)
+
+    result = tax_scale.calc(tax_base)
+    tools.assert_near(result, [0, 3.5*0.25, 6*0.7, 7*(0.7-(0.7-0.5)/2), 0], absolute_error_margin = 0)
+
+
 def test_to_marginal():
     tax_base = numpy.array([1, 1.5, 2, 2.5])
     tax_scale = taxscales.LinearAverageRateTaxScale()
