@@ -52,9 +52,6 @@ class SingleAmountTaxScale(AmountTaxScaleLike):
             unit = self.unit,
             )
         
-        if self.thresholds:
-            for threshold, amount in list(zip(self.thresholds, self.amounts)):
-                average_tax_scale.add_bracket(threshold, amount)
 
         for threshold, amount in zip(self.thresholds, self.amounts):
             try:
