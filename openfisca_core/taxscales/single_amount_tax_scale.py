@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import itertools
 import typing
 
 import numpy
 
+from openfisca_core import taxscales
 from openfisca_core.taxscales import AmountTaxScaleLike
 
 if typing.TYPE_CHECKING:
@@ -40,3 +42,16 @@ class SingleAmountTaxScale(AmountTaxScaleLike):
             )
 
         return guarded_amounts[bracket_indices - 1]
+
+    def to_average(self) -> taxscales.LinearAverageRateTaxScale:
+        average_tax_scale = taxscales.LinearAverageRateTaxScale(
+            name = self.name,
+            option = self.option,
+            unit = self.unit,
+            )
+
+        if self.thresholds:
+            for threshold, amount in list(zip(self.thresholds, self.amounts)):
+                average_tax_scale.add_bracket(threshold, amount)
+
+        return average_tax_scale
