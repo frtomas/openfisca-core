@@ -81,7 +81,7 @@ def test_calc():
     tax_scale.add_bracket(8, 0.5)
 
     result = tax_scale.calc(tax_base)
-    tools.assert_near(result, [0, 3.5*0.25, 6*0.7, 7*(0.7-(0.7-0.5)/2), 0], absolute_error_margin = 0)
+    tools.assert_near(result, [0, 3.5 * 0.25, 6 * 0.7, 7 * (0.7 - (0.7 - 0.5) / 2), 0], absolute_error_margin = 0)
 
 
 def test_to_marginal():
