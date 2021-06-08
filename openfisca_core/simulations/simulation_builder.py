@@ -508,13 +508,11 @@ class SimulationBuilder:
             axis_entity_step_size = self.entity_counts[axis_entity.plural]
             # Distribute values along axes
             for axis in parallel_axes:
-                axis_index = axis.get('index', 0)
                 axis_period = axis.get('period', self.default_period)
                 axis_name = axis['name']
                 variable = axis_entity.get_variable(axis_name)
 
                 data_tuple = self.get_input(axis_name, axis_period)
-                print('here')
                 if data_tuple is None:
                     array = variable.default_array(axis_count * axis_entity_step_size)
                     present = numpy.full(array.size, True)
@@ -559,6 +557,9 @@ class SimulationBuilder:
                     data_tuple = self.get_input(axis_name, axis_period)
                     if data_tuple is None:
                         array = variable.default_array(cell_count * axis_entity_step_size)
+                        present = numpy.full(array.size, True)
+                    elif data_tuple[1].size == axis_entity_step_size:
+                        array = numpy.tile(data_tuple[1], cell_count)
                         present = numpy.full(array.size, True)
                     else:
                         array, present = data_tuple
