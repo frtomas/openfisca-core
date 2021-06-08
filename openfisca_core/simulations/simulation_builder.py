@@ -514,6 +514,7 @@ class SimulationBuilder:
                 variable = axis_entity.get_variable(axis_name)
 
                 data_tuple = self.get_input(axis_name, axis_period)
+                print('here')
                 if data_tuple is None:
                     array = variable.default_array(axis_count * axis_entity_step_size)
                     present = numpy.full(array.size, True)
