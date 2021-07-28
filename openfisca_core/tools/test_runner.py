@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import warnings
+# import warnings
 import sys
 import os
 import traceback
@@ -12,13 +12,12 @@ import pytest
 from openfisca_core.tools import assert_near
 from openfisca_core.simulation_builder import SimulationBuilder
 from openfisca_core.errors import SituationParsingError, VariableNotFound
-from openfisca_core.warnings import LibYAMLWarning
+# from openfisca_core.warnings import LibYAMLWarning
 
 
 def import_yaml():
     import yaml
-    try:
-        from yaml import CLoader as Loader
+    """ from yaml import CLoader as Loader
     except ImportError:
         message = [
             "libyaml is not installed in your environment.",
@@ -26,8 +25,8 @@ def import_yaml():
             "run 'pip uninstall pyyaml && pip install pyyaml --no-cache-dir'",
             "so that it is used in your Python environment."
             ]
-        warnings.warn(" ".join(message), LibYAMLWarning)
-        from yaml import SafeLoader as Loader
+        warnings.warn(" ".join(message), LibYAMLWarning) """
+    from yaml import SafeLoader as Loader
     return yaml, Loader
 
 
