@@ -1,6 +1,7 @@
 version: 2
 jobs:
   run_tests:
+    parallelism: 2
     docker:
       - image: python:3.7
 
