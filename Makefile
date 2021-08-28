@@ -55,6 +55,7 @@ test-python: \
 ## Run openfisca-core tests.
 test-python-%: \
 	$(shell git ls-files "openfisca_core/types/**/*.py") \
+	$(shell git ls-files "openfisca_core/indexed_enums/**/*.py") \
 	$(shell git ls-files "openfisca_core/entities/**/*.py") \
 	$(shell git ls-files "openfisca_core/commons/**/*.py") \
 	$(shell git ls-files "tests/**/*.py")
@@ -67,6 +68,7 @@ test-python-%: \
 ## Run static type checkers for type errors.
 test-types: \
 	test-types-strict-types \
+	test-types-strict-indexed_enums \
 	test-types-strict-entities \
 	test-types-strict-commons \
 	test-types-all \
@@ -85,6 +87,7 @@ test-types-all:
 ## Run linters to check for syntax and style errors.
 test-style: \
 	test-style-doc-types \
+	test-style-doc-indexed_enums \
 	test-style-doc-entities \
 	test-style-doc-commons \
 	test-style-all \
