@@ -2,7 +2,7 @@ from typing import Optional
 
 import numpy
 
-from .typing import ArrayLike, Array
+from . import ArrayLike, Array
 
 
 def average_rate(target: Array[float], varying: ArrayLike[float], trim: Optional[ArrayLike[float]] = None) -> Array[float]:

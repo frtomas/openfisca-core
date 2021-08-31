@@ -1,6 +1,6 @@
 import numpy
 
-from .typing import ArrayLike, Array
+from . import ArrayLike, Array
 
 
 def apply_thresholds(input: Array[float], thresholds: ArrayLike[float], choices: ArrayLike[float]) -> Array[float]:

@@ -1,6 +1,6 @@
 from typing import Any
 
-from .typing import Array
+from . import Array
 
 
 def empty_clone(original: Any) -> Any:
