@@ -25,3 +25,7 @@ class Personifiable(Documentable, abc.ABC):
 @dataclasses.dataclass(init = False, repr = False)
 class Rolifiable(Personifiable, abc.ABC):
     ...
+
+
+class Representable(abc.ABC):
+    ...
