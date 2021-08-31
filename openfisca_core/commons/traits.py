@@ -22,6 +22,6 @@ class Personifiable(Documentable, abc.ABC):
     doc: str
 
 
-@dataclasses.dataclass(repr = False)
+@dataclasses.dataclass(init = False, repr = False)
 class Rolifiable(Personifiable, abc.ABC):
     ...
