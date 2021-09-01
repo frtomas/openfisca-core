@@ -1,6 +1,7 @@
 import abc
 import dataclasses
 import textwrap
+from typing import Optional
 
 
 class Documentable(abc.ABC):
@@ -17,8 +18,8 @@ class Documentable(abc.ABC):
 @dataclasses.dataclass(repr = False)
 class Personifiable(Documentable, abc.ABC):
     key: str
-    plural: str
-    label: str
+    plural: Optional[str]
+    label: Optional[str]
     doc: str
 
 
