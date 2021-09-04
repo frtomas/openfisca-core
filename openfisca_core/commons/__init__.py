@@ -23,7 +23,7 @@
 
 from .decorators import deprecated  # noqa: F401
 from .typing import ArrayLike, Array  # noqa: F401
-from .traits import Representable, Personifiable, Rolifiable  # noqa: F401
+from .traits import Representable, Personifiable, Rolifiable, Aggregatable  # noqa: F401
 from .dummy import Dummy  # noqa: F401
 from .formulas import apply_thresholds, concat, switch  # noqa: F401
 from .misc import empty_clone, stringify_array  # noqa: F401

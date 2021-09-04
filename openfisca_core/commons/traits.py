@@ -17,6 +17,7 @@ class Documentable(abc.ABC):
 
 @dataclasses.dataclass(repr = False)
 class Personifiable(Documentable, abc.ABC):
+
     key: str
     plural: Optional[str]
     label: Optional[str]
@@ -25,6 +26,12 @@ class Personifiable(Documentable, abc.ABC):
 
 @dataclasses.dataclass(init = False, repr = False)
 class Rolifiable(Personifiable, abc.ABC):
+
+    ...
+
+
+class Aggregatable(abc.ABC):
+
     ...
 
 
