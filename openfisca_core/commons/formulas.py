@@ -1,6 +1,6 @@
 import numpy
 
-from . import ArrayLike, Array
+from openfisca_core.types import ArrayLike, Array
 
 
 def apply_thresholds(input: Array[float], thresholds: ArrayLike[float], choices: ArrayLike[float]) -> Array[float]:

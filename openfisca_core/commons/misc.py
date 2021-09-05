@@ -1,6 +1,6 @@
 from typing import Any
 
-from . import Array
+from openfisca_core.types import Array
 
 
 def empty_clone(original: Any) -> Any:
