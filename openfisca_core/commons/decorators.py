@@ -3,7 +3,7 @@ import warnings
 import typing
 from typing import Any
 
-from openfisca_core.types import ArgsType, KwdsType, DecoType, FuncType
+from openfisca_core.types import DecoType, FuncType
 
 
 def deprecated(since: str, expires: str) -> DecoType:
