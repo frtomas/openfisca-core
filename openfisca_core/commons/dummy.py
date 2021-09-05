@@ -1,4 +1,4 @@
-from .. import commons
+from .decorators import deprecated
 
 
 class Dummy:
@@ -13,6 +13,6 @@ class Dummy:
 
     """
 
-    @commons.deprecated(since = "34.7.0", expires = "36.0.0")
+    @deprecated(since = "34.7.0", expires = "36.0.0")
     def __init__(self) -> None:
         pass
