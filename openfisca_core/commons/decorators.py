@@ -1,7 +1,8 @@
 import functools
 import warnings
+from typing import Any
 
-from openfisca_core.types import Decorator
+from openfisca_core.types import Args, Kwds, Decorator
 
 
 def deprecated(since: str, expires: str) -> Decorator:
@@ -11,7 +12,7 @@ def deprecated(since: str, expires: str) -> Decorator:
 def decorator(function: Decorator, since: str, expires: str) -> Decorator:
 
     @functools.wraps(function)
-    def wrapper(*args, **kwds):
+    def wrapper(*args: Args, **kwds: Kwds) -> Any:
         message = [
             f"{function.__qualname__} has been deprecated since version",
             f"{since}, and will be removed in {expires}.",
