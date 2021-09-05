@@ -8,7 +8,7 @@ def deprecated(since: str, expires: str) -> Decorator:
     return functools.partial(decorator, since = since, expires = expires)
 
 
-def decorator(function: Decorator, since: str, expires: set) -> Decorator:
+def decorator(function: Decorator, since: str, expires: str) -> Decorator:
 
     @functools.wraps(function)
     def wrapper(*args, **kwds):
