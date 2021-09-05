@@ -31,6 +31,7 @@ from .data_types import (  # noqa: F401
     Array,
     ArrayLike,
     Kwds,
+    RoleLike,
     Roles,
     )
 
