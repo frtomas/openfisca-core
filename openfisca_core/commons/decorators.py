@@ -1,13 +1,14 @@
 import functools
 import warnings
-from typing import Callable
+
+from openfisca_core.types import Decorator
 
 
-def deprecated(since: str, expires: str) -> Callable:
+def deprecated(since: str, expires: str) -> Decorator:
     return functools.partial(decorator, since = since, expires = expires)
 
 
-def decorator(function: Callable, since: str, expires: set) -> Callable:
+def decorator(function: Decorator, since: str, expires: set) -> Decorator:
 
     @functools.wraps(function)
     def wrapper(*args, **kwds):
