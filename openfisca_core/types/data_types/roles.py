@@ -1,8 +1,8 @@
 from typing import Dict, List, Union
 
 
-Subroles = List[str]
+SubrolesLike = List[str]
 
-RoleLike = Dict[str, Union[str, Subroles]]
+RoleLike = Dict[str, Union[str, SubrolesLike]]
 
-Roles = List[RoleLike]
+RolesLike = List[RoleLike]
