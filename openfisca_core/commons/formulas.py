@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import numpy
 
 from openfisca_core.types import ArrayLike, Array
@@ -66,7 +68,7 @@ def concat(this: ArrayLike[str], that: ArrayLike[str]) -> Array[str]:
     return numpy.char.add(this, that)
 
 
-def switch(conditions: Array[float], value_by_condition: dict) -> Array[float]:
+def switch(conditions: Array[float], value_by_condition: Dict[float, Any]) -> Array[float]:
     """Reproduces a switch statement.
 
     Given an array of conditions, returns an array of the same size,
