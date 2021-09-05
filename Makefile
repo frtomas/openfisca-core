@@ -46,8 +46,7 @@ check-types: \
 ## Run static type checkers for type errors.
 check-types-all:
 	@$(call help,$@:)
-	@mypy --package openfisca_core
-	@mypy --package openfisca_web_api
+	@mypy --package openfisca_core --package openfisca_web_api
 
 ## Run static type checkers for type errors.
 check-types-strict-%:
@@ -77,9 +76,23 @@ format-style: $(shell git ls-files "*.py")
 	@autopep8 $?
 
 ## Run openfisca-core tests.
-test: clean check-syntax-errors check-style check-types
-	@$(call help,$@:)
-	@PYTEST_ADDOPTS="${PYTEST_ADDOPTS} --cov=openfisca_core" pytest
+test: clean check-syntax-errors
+	@${MAKE} test-python ;
+	@${MAKE} check-types ;
+	@${MAKE} check-style ;
+
+test-python: \
+	test-python-1 \
+	test-python-2 \
+	test-python-3 \
+	test-python-4 \
+	;
+
+test-python-%: $(shell git ls-files "openfisca_core/commons/**/*.py" "openfisca_core/entities/**/*.py" "tests/**/*.py")
+	@$(eval total := $(shell echo $? | wc -w))
+	@$(eval split := $(shell echo $$(( (${total} + 3 ) / 4 ))))
+	@$(eval chunk := $(shell echo $? | cut -d" " -f $$(( ${split} * $* + 1 ))-$$(( ${split} * ( $* + 1 ) ))))
+	@PYTEST_ADDOPTS="${PYTEST_ADDOPTS} -qx" pytest ${chunk}
 
 ## Check that the current changes do not break the doc.
 test-doc:
