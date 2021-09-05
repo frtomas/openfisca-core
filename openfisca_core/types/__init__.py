@@ -21,4 +21,16 @@
 #
 # See: https://www.python.org/dev/peps/pep-0008/#imports
 
-from .arrays import ArrayLike, Array  # noqa: F401
+from .data_types import (  # noqa: F401
+    ArrayLike,
+    Array,
+    Formula,
+    )
+
+from .protocols import (  # noqa: F401
+    Aggregatable,
+    Instantizable,
+    Personifiable,
+    Representable,
+    Rolifiable,
+    )
