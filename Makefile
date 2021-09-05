@@ -38,9 +38,10 @@ check-syntax-errors: .
 
 ## Run static type checkers for type errors.
 check-types: \
-	check-types-all \
-	check-types-strict-commons \
+	check-types-strict-types \
 	check-types-strict-entities \
+	check-types-strict-commons \
+	check-types-all \
 	;
 
 ## Run static type checkers for type errors.
@@ -51,13 +52,14 @@ check-types-all:
 ## Run static type checkers for type errors.
 check-types-strict-%:
 	@$(call help,$@:)
-	@mypy --cache-dir .mypy_cache-openfisca_core.$* --strict --package openfisca_core.$*
+	@mypy --cache-dir .mypy_cache-openfisca_core.$* --implicit-reexport --strict --package openfisca_core.$*
 
 ## Run linters to check for syntax and style errors.
 check-style: \
-	check-style-all \
-	check-style-doc-commons \
+	check-style-doc-types \
 	check-style-doc-entities \
+	check-style-doc-commons \
+	check-style-all \
 	;
 
 ## Run linters to check for syntax and style errors.
@@ -88,11 +90,14 @@ test-python: \
 	test-python-4 \
 	;
 
-test-python-%: $(shell git ls-files "openfisca_core/commons/**/*.py" "openfisca_core/entities/**/*.py" "tests/**/*.py")
+test-python-%: \
+	$(shell git ls-files "openfisca_core/entities/**/*.py") \
+	$(shell git ls-files "openfisca_core/commons/**/*.py") \
+	$(shell git ls-files "tests/**/*.py")
 	@$(eval total := $(shell echo $? | wc -w))
 	@$(eval split := $(shell echo $$(( (${total} + 3 ) / 4 ))))
 	@$(eval chunk := $(shell echo $? | cut -d" " -f $$(( ${split} * $* + 1 ))-$$(( ${split} * ( $* + 1 ) ))))
-	@PYTEST_ADDOPTS="${PYTEST_ADDOPTS} -qx" pytest ${chunk}
+	@PYTEST_ADDOPTS="${PYTEST_ADDOPTS}" pytest ${chunk}
 
 ## Check that the current changes do not break the doc.
 test-doc:
