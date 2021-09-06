@@ -1,8 +1,15 @@
-from typing import Dict, List, Union
-
+from typing import List, Optional
+from typing_extensions import TypedDict
 
 SubrolesLike = List[str]
 
-RoleLike = Dict[str, Union[str, SubrolesLike]]
+RoleLike = TypedDict("RoleLike", {
+    "key": str,
+    "plural": Optional[str],
+    "label": Optional[str],
+    "doc": Optional[str],
+    "max": Optional[int],
+    "subroles": Optional[SubrolesLike],
+    })
 
 RolesLike = List[RoleLike]
