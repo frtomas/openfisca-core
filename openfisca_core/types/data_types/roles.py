@@ -1,7 +1,5 @@
-from typing import Sequence, Optional
+from typing import Iterable, Optional
 from typing_extensions import TypedDict
-
-SubrolesLike = Sequence[str]
 
 
 class RoleLike(TypedDict, total = False):
@@ -10,7 +8,4 @@ class RoleLike(TypedDict, total = False):
     label: Optional[str]
     doc: Optional[str]
     max: Optional[int]
-    subroles: Optional[SubrolesLike]
-
-
-RolesLike = Sequence[RoleLike]
+    subroles: Optional[Iterable[str]]
