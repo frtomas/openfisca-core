@@ -1,7 +1,7 @@
-from typing import List, Optional
+from typing import Sequence, Optional
 from typing_extensions import TypedDict
 
-SubrolesLike = List[str]
+SubrolesLike = Sequence[str]
 
 
 class RoleLike(TypedDict, total = False):
@@ -13,4 +13,4 @@ class RoleLike(TypedDict, total = False):
     subroles: Optional[SubrolesLike]
 
 
-RolesLike = List[RoleLike]
+RolesLike = Sequence[RoleLike]
