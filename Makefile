@@ -36,53 +36,15 @@ check-syntax-errors: .
 	@$(call help,$@:)
 	@python -m compileall -q $?
 
-## Run static type checkers for type errors.
-check-types: \
-	check-types-strict-types \
-	check-types-strict-entities \
-	check-types-strict-commons \
-	check-types-all \
-	;
-
-## Run static type checkers for type errors.
-check-types-all:
+## Run tests, type and style linters.
+test: clean check-syntax-errors
 	@$(call help,$@:)
-	@mypy --package openfisca_core --package openfisca_web_api
-
-## Run static type checkers for type errors.
-check-types-strict-%:
-	@$(call help,$@:)
-	@mypy --cache-dir .mypy_cache-openfisca_core.$* --implicit-reexport --strict --package openfisca_core.$*
-
-## Run linters to check for syntax and style errors.
-check-style: \
-	check-style-doc-types \
-	check-style-doc-entities \
-	check-style-doc-commons \
-	check-style-all \
-	;
-
-## Run linters to check for syntax and style errors.
-check-style-all:
-	@$(call help,$@:)
-	@flake8 --extend-ignore=D `git ls-files | grep "\.py$$"`
-
-## Run linters to check for syntax and style errors.
-check-style-doc-%:
-	@$(call help,$@:)
-	@flake8 --select=D101,D102,D103,DAR openfisca_core/$*
-
-## Run code formatters to correct style errors.
-format-style: $(shell git ls-files "*.py")
-	@$(call help,$@:)
-	@autopep8 $?
+	@${MAKE} test-python ;
+	@${MAKE} test-types ;
+	@${MAKE} test-style ;
+	@${MAKE} test-doc ;
 
 ## Run openfisca-core tests.
-test: clean check-syntax-errors
-	@${MAKE} test-python ;
-	@${MAKE} check-types ;
-	@${MAKE} check-style ;
-
 test-python: \
 	test-python-1 \
 	test-python-2 \
@@ -90,14 +52,53 @@ test-python: \
 	test-python-4 \
 	;
 
+## Run openfisca-core tests.
 test-python-%: \
+	$(shell git ls-files "openfisca_core/types/**/*.py") \
 	$(shell git ls-files "openfisca_core/entities/**/*.py") \
 	$(shell git ls-files "openfisca_core/commons/**/*.py") \
 	$(shell git ls-files "tests/**/*.py")
 	@$(eval total := $(shell echo $? | wc -w))
 	@$(eval split := $(shell echo $$(( (${total} + 3 ) / 4 ))))
 	@$(eval chunk := $(shell echo $? | cut -d" " -f $$(( ${split} * $* + 1 ))-$$(( ${split} * ( $* + 1 ) ))))
+	@$(call help,$@:)
 	@PYTEST_ADDOPTS="${PYTEST_ADDOPTS}" pytest ${chunk}
+
+## Run static type checkers for type errors.
+test-types: \
+	test-types-strict-types \
+	test-types-strict-entities \
+	test-types-strict-commons \
+	test-types-all \
+	;
+
+## Run static type checkers for type errors.
+test-types-strict-%:
+	@$(call help,$@:)
+	@mypy --cache-dir .mypy_cache-openfisca_core.$* --implicit-reexport --strict --package openfisca_core.$*
+
+## Run static type checkers for type errors.
+test-types-all:
+	@$(call help,$@:)
+	@mypy --package openfisca_core --package openfisca_web_api
+
+## Run linters to check for syntax and style errors.
+test-style: \
+	check-style-doc-types \
+	check-style-doc-entities \
+	check-style-doc-commons \
+	check-style-all \
+	;
+
+## Run linters to check for syntax and style errors.
+test-style-doc-%:
+	@$(call help,$@:)
+	@flake8 --select=D101,D102,D103,DAR openfisca_core/$*
+
+## Run linters to check for syntax and style errors.
+test-style-all:
+	@$(call help,$@:)
+	@flake8 --extend-ignore=D `git ls-files | grep "\.py$$"`
 
 ## Check that the current changes do not break the doc.
 test-doc:
@@ -154,6 +155,11 @@ test-doc-install:
 test-doc-build:
 	@$(call help,$@:)
 	@sphinx-build -M dummy doc/source doc/build -n -q -W
+
+## Run code formatters to correct style errors.
+format-style: $(shell git ls-files "*.py")
+	@$(call help,$@:)
+	@autopep8 $?
 
 ## Serve the openfisca Web API.
 api:
