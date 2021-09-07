@@ -1,24 +1,28 @@
 import functools
 import warnings
 import typing
-from typing import Any
+from typing import Any, Callable, TypeVar
 
-from openfisca_core.types import DecoType, FuncType
-
-
-def deprecated(since: str, expires: str) -> DecoType:
-    return functools.partial(decorator, since = since, expires = expires)
+FuncType = TypeVar("FuncType", bound = Callable[..., Any])
 
 
-def decorator(function: FuncType, since: str, expires: str) -> FuncType:
+class deprecated:
 
-    @functools.wraps(function)
-    def wrapper(*args: Any, **kwds: Any) -> Any:
-        message = [
-            f"{function.__qualname__} has been deprecated since version",
-            f"{since}, and will be removed in {expires}.",
-            ]
-        warnings.warn(" ".join(message), DeprecationWarning)
-        return function(*args, **kwds)
+    def __init__(self, since: str, expires: str) -> None:
+        self.since = since
+        self.expires = expires
 
-    return typing.cast(FuncType, wrapper)
+    def __call__(self, function: FuncType) -> FuncType:
+        self.function = function
+
+        def wrapper(*args: Any, **kwds: Any) -> Any:
+            message = [
+                f"{self.function.__qualname__} has been deprecated since",
+                f"version {self.since}, and will be removed in",
+                f"{self.expires}.",
+                ]
+            warnings.warn(" ".join(message), DeprecationWarning)
+            return self.function(*args, **kwds)
+
+        functools.update_wrapper(wrapper, function)
+        return typing.cast(FuncType, wrapper)
