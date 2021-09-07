@@ -3,7 +3,7 @@ import warnings
 import typing
 from typing import Any, Callable, TypeVar
 
-FuncType = TypeVar("FuncType", bound = Callable[..., Any])
+_F = TypeVar("_F", bound = Callable[..., Any])
 
 
 class deprecated:
@@ -12,7 +12,7 @@ class deprecated:
         self.since = since
         self.expires = expires
 
-    def __call__(self, function: FuncType) -> FuncType:
+    def __call__(self, function: _F) -> _F:
         self.function = function
 
         def wrapper(*args: Any, **kwds: Any) -> Any:
@@ -25,4 +25,4 @@ class deprecated:
             return self.function(*args, **kwds)
 
         functools.update_wrapper(wrapper, function)
-        return typing.cast(FuncType, wrapper)
+        return typing.cast(_F, wrapper)
