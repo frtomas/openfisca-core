@@ -84,10 +84,10 @@ test-types-all:
 
 ## Run linters to check for syntax and style errors.
 test-style: \
-	check-style-doc-types \
-	check-style-doc-entities \
-	check-style-doc-commons \
-	check-style-all \
+	test-style-doc-types \
+	test-style-doc-entities \
+	test-style-doc-commons \
+	test-style-all \
 	;
 
 ## Run linters to check for syntax and style errors.
