@@ -9,6 +9,8 @@ class RoleLike(TypedDict, total = False):
     (a) decoupling the codebse, thanks to structural subtyping, and
     (b) documenting/enforcing the blueprints of the different OpenFisca models.
 
+    .. versionadded:: 35.5.0
+
     """
 
     key: str
