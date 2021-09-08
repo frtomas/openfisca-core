@@ -86,17 +86,17 @@ test-types-all:
 
 ## Run linters to check for syntax and style errors.
 test-style: \
-	test-style-doc-types \
-	test-style-doc-indexed_enums \
-	test-style-doc-entities \
-	test-style-doc-commons \
+	test-style-types \
+	test-style-indexed_enums \
+	test-style-entities \
+	test-style-commons \
 	test-style-all \
 	;
 
 ## Run linters to check for syntax and style errors.
-test-style-doc-%:
+test-style-%:
 	@$(call help,$@:)
-	@flake8 --select=D101,D102,D103,DAR openfisca_core/$*
+	@flake8 --select=C901,D101,D102,D103,DAR --max-complexity 10 openfisca_core/$*
 
 ## Run linters to check for syntax and style errors.
 test-style-all:
