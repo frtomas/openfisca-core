@@ -62,6 +62,7 @@ setup(
         'console_scripts': [
             'openfisca=openfisca_core.scripts.openfisca_command:main',
             'openfisca-run-test=openfisca_core.scripts.openfisca_command:main',
+            'openfica = openfisca_cli.main:program.run',
             ],
         },
     extras_require = {
