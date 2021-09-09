@@ -97,6 +97,7 @@ test-style: \
 test-style-%:
 	@$(call help,$@:)
 	@flake8 --select=C901,D101,D102,D103,DAR --max-complexity 10 openfisca_core/$*
+	@pylint --disable=all --enable=classes,exceptions,imports,miscellaneous,refactoring --disable=W0201,W0231 --score="no" openfisca_core/$*
 
 ## Run linters to check for syntax and style errors.
 test-style-all:
