@@ -9,7 +9,8 @@ from openfisca_core.errors import PeriodMismatchError
 from openfisca_core.data_storage import InMemoryStorage, OnDiskStorage
 from openfisca_core.indexed_enums import Enum
 from openfisca_core.periods import Period
-from openfisca_core.types import ArrayLike, ArrayType
+from openfisca_core.variables import Variable
+from openfisca_core.types import ArrayLike, ArrayType, Aggregatable
 
 
 class Holder:
@@ -17,7 +18,7 @@ class Holder:
     A holder keeps tracks of a variable values after they have been calculated, or set as an input.
     """
 
-    def __init__(self, variable, population):
+    def __init__(self, variable: Variable, population: Aggregatable) -> None:
         self.population = population
         self.variable = variable
         self.simulation = population.simulation

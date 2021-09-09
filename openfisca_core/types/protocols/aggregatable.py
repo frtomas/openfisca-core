@@ -1,3 +1,5 @@
+from typing import Any
+
 from typing_extensions import Protocol
 
 
@@ -11,5 +13,8 @@ class Aggregatable(Protocol):
     .. versionadded:: 35.5.0
 
     """
+
+    count: int
+    simulation: Any
 
     ...

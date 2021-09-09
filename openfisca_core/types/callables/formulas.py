@@ -1,8 +1,8 @@
 from typing import Callable
 
-from ..protocols._aggregatable import Aggregatable
 from ..protocols._instantizable import Instantizable
 from ..protocols._timeable import Timeable
+from ..protocols.aggregatable import Aggregatable
 from ..data_types import ArrayType
 
 ParamsType = Callable[[Timeable], Instantizable]

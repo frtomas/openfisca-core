@@ -21,6 +21,7 @@
 #
 # See: https://www.python.org/dev/peps/pep-0008/#imports
 
+from .aggregatable import Aggregatable  # noqa: F401
 from .buildable import Buildable  # noqa: F401
 from .descriptable import Descriptable  # noqa: F401
 from .personifiable import Personifiable  # noqa: F401
