@@ -85,25 +85,44 @@ class Holder:
         if self._disk_storage:
             return self._disk_storage.get(period)
 
-    def get_memory_usage(self):
-        """
-        Get data about the virtual memory usage of the holder.
+    def get_memory_usage(self) -> dict:
+        """Get data about the virtual memory usage of the :obj:`.Holder`.
 
-        :returns: Memory usage data
-        :rtype: dict
+        Returns:
+            Memory usage data.
 
-        Example:
+        Examples:
+            >>> from pprint import pprint
 
-        >>> holder.get_memory_usage()
-        >>> {
-        >>>    'nb_arrays': 12,  # The holder contains the variable values for 12 different periods
-        >>>    'nb_cells_by_array': 100, # There are 100 entities (e.g. persons) in our simulation
-        >>>    'cell_size': 8,  # Each value takes 8B of memory
-        >>>    'dtype': dtype('float64')  # Each value is a float 64
-        >>>    'total_nb_bytes': 10400  # The holder uses 10.4kB of virtual memory
-        >>>    'nb_requests': 24  # The variable has been computed 24 times
-        >>>    'nb_requests_by_array': 2  # Each array stored has been on average requested twice
-        >>>    }
+            >>> from openfisca_core.entities import Entity
+            >>> from openfisca_core.populations import Population
+            >>> from openfisca_core.simulations import Simulation
+            >>> from openfisca_core.taxbenefitsystems import TaxBenefitSystem
+            >>> from openfisca_core.variables import Variable
+
+            >>> entity = Entity("", "", "", "")
+
+            >>> class MyVariable(Variable):
+            ...     definition_period = "year"
+            ...     entity = entity
+            ...     value_type = int
+
+            >>> variable = MyVariable()
+            >>> population = Population(entity)
+            >>> holder = Holder(variable, population)
+
+            >>> tax_benefit_system = TaxBenefitSystem([entity])
+            >>> populations = {entity.key: population}
+            >>> simulation = Simulation(tax_benefit_system, populations)
+            >>> holder.simulation = simulation
+
+            >>> pprint(holder.get_memory_usage(), indent = 3)
+            {  'cell_size': nan,
+               'dtype': <class 'numpy.int32'>,
+               'nb_arrays': 0,
+               'nb_cells_by_array': 0,
+               'total_nb_bytes': 0...
+
         """
 
         usage = dict(
