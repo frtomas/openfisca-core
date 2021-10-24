@@ -91,8 +91,9 @@ class GroupEntity(Entity):
             ):
         super().__init__(key, plural, label, doc)
         self.is_person = False
-        self.roles = ()
-        build_roles(self, roles)
+        self.roles = tuple(build_role(self, desc) for desc in roles)
+        self.flattened_roles = flatten_roles(self.roles)
+        self.roles_description = roles
 
     def __getattr__(self, attr: str) -> Any:
         if attr.isupper():
@@ -139,25 +140,24 @@ class GroupEntity(Entity):
         return commons.first(where)
 
 
-def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
-    # Useless step kept to avoid changing the signature.
-    entity.roles_description = roles
+def build_role(entity: HasRoles, description: RoleLike) -> SupportsRole:
+    """Build roles & sub-roles."""
 
-    # Build roles & sub-roles.
-    for description in entity.roles_description:
-        role = Role(description, entity)
-        subroles = description.get("subroles", ())
-        entity.roles = (*entity.roles, role)
+    role = Role(description, entity)
+    subroles = description.get("subroles", ())
 
-        if subroles:
-            role.subroles = ()
+    if subroles:
+        role.subroles = ()
 
-            for key in subroles:
-                subrole = Role({"key": key, "max": 1}, entity)
-                role.subroles = (*role.subroles, subrole)
+        for key in subroles:
+            subrole = Role({"key": key, "max": 1}, entity)
+            role.subroles = (*role.subroles, subrole)
 
-            role.max = len(role.subroles)
+        role.max = len(role.subroles)
 
-    # Finally, flatten roles.
-    nested_roles = [role.subroles or [role] for role in entity.roles]
-    entity.flattened_roles = tuple(commons.flatten(nested_roles))
+    return role
+
+
+def flatten_roles(roles: Sequence[SupportsRole]) -> Sequence[SupportsRole]:
+    tree = [role.subroles or [role] for role in roles]
+    return tuple(commons.flatten(tree))
