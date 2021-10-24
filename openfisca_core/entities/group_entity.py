@@ -144,17 +144,20 @@ def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
     entity.roles_description = roles
 
     # Build roles & sub-roles.
-    for role_description in entity.roles_description:
-        role = Role(role_description, entity)
+    for description in entity.roles_description:
+        role = Role(description, entity)
+        subroles = description.get("subroles", ())
         entity.roles = (*entity.roles, role)
 
-        if role_description.get('subroles'):
-            role.subroles = []
+        if subroles:
+            role.subroles = ()
 
-            for subrole_key in role_description['subroles']:
-                subrole = Role({'key': subrole_key, 'max': 1}, entity)
-                role.subroles.append(subrole)
+            for key in subroles:
+                subrole = Role({"key": key, "max": 1}, entity)
+                role.subroles = (*role.subroles, subrole)
 
             role.max = len(role.subroles)
 
-    entity.flattened_roles = tuple(commons.flatten([role2.subroles or [role2] for role2 in entity.roles]))
+    # Finally, flatten roles.
+    nested_roles = [role.subroles or [role] for role in entity.roles]
+    entity.flattened_roles = tuple(commons.flatten(nested_roles))
