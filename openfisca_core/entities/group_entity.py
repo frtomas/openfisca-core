@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+from typing import Sequence
+
 from dataclasses import dataclass
 
+from openfisca_core.types import HasRoles
+
 from openfisca_core.entities import Entity, Role
+
+from .role import RoleLike
 
 
 @dataclass
@@ -55,7 +61,14 @@ class GroupEntity(Entity):
 
     """
 
-    def __init__(self, key, plural, label, doc, roles):
+    def __init__(
+            self,
+            key: str,
+            plural: str,
+            label: str,
+            doc: str,
+            roles: Sequence[RoleLike],
+            ):
         super().__init__(key, plural, label, doc)
         self.roles_description = roles
         self.roles = []
