@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Sequence
+from typing import Any, Optional, Sequence
 
 from dataclasses import dataclass
 
@@ -91,13 +91,52 @@ class GroupEntity(Entity):
             ):
         super().__init__(key, plural, label, doc)
         self.is_person = False
+        self.roles = ()
         build_roles(self, roles)
+
+    def __getattr__(self, attr: str) -> Any:
+        if attr.isupper():
+            return self._role(attr)
+
+        return self.__getattribute__(attr)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.key})"
 
     def __str__(self) -> str:
         return self.plural
+
+    def _role(self, upper: str) -> Optional[SupportsRole]:
+        """Searches and returns the requested :obj:`.Role`.
+
+        Args:
+            upper: The role key, uppercased.
+
+        Returns:
+            Role: The requested :obj:`.Role`.
+            None: Otherwise.
+
+        Examples:
+            >>> entity = GroupEntity("", "", "", "", ())
+            >>> role = Role({"key": "key"}, entity)
+            >>> entity.roles += role,
+
+            >>> entity._role(role.key.upper())
+            Role(key)
+
+            >>> entity._role(role.key)
+
+        .. versionadded:: 35.7.0
+
+        """
+
+        where = (
+            role
+            for role in (*self.roles, *self.flattened_roles)
+            if role.key.upper() == upper
+            )
+
+        return commons.first(where)
 
 
 def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
@@ -107,7 +146,6 @@ def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
     # Build roles & sub-roles.
     for role_description in entity.roles_description:
         role = Role(role_description, entity)
-        setattr(entity, role.key.upper(), role)
         entity.roles = (*entity.roles, role)
 
         if role_description.get('subroles'):
@@ -115,7 +153,6 @@ def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
 
             for subrole_key in role_description['subroles']:
                 subrole = Role({'key': subrole_key, 'max': 1}, entity)
-                setattr(entity, subrole.key.upper(), subrole)
                 role.subroles.append(subrole)
 
             role.max = len(role.subroles)

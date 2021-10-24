@@ -38,5 +38,6 @@ class SupportsRole(Protocol):
 
     """
 
+    key: str
     max: Optional[int]
     subroles: Optional[Sequence[SupportsRole]]

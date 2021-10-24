@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Iterator, Sequence, TypeVar
+from typing import Any, Dict, Iterator, Optional, Sequence, TypeVar
 
 from itertools import chain
 
@@ -91,6 +91,28 @@ def concat(this: ArrayLike[str], that: ArrayLike[str]) -> ArrayType[str]:
         that = that.astype('str')
 
     return numpy.char.add(this, that)
+
+
+def first(seq: ArrayLike[T]) -> Optional[T]:
+    """Returns the first element of a sequence.
+
+    Args:
+        seq: Any sequence.
+
+    Returns:
+        The first value, or None.
+
+    Examples:
+        >>> first([1, 2, 3])
+        1
+
+        >>> first([])
+
+    .. versionadded:: 35.7.0
+
+    """
+
+    return next(iter(seq), None)
 
 
 def flatten(seqs: ArrayLike[ArrayLike[T]]) -> Iterator[T]:
