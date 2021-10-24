@@ -26,6 +26,8 @@ class GroupEntity(Entity):
         label: A summary description.
         doc: A full description, dedented.
         is_person: Represents an individual? Defaults to False.
+        roles: List of the roles of the group entity.
+        flattened_roles: ``roles`` flattened out.
 
     Args:
         key: Key to identify the :class:`.GroupEntity`.
@@ -62,10 +64,22 @@ class GroupEntity(Entity):
 
     """
 
-    is_person: bool = False
-    roles: Sequence[SupportsRole] = ()
-    roles_description: Sequence[RoleLike] = ()
-    flattened_roles: Sequence[SupportsRole] = ()
+    __slots__ = tuple((
+        "key",
+        "plural",
+        "label",
+        "doc",
+        "is_person",
+        "roles",
+        "flattened_roles",
+        "roles_description",
+        "_tax_benefit_system",
+        ))
+
+    is_person: bool
+    roles: Sequence[SupportsRole]
+    flattened_roles: Sequence[SupportsRole]
+    roles_description: Sequence[RoleLike]
 
     def __init__(
             self,
@@ -76,6 +90,7 @@ class GroupEntity(Entity):
             roles: Sequence[RoleLike],
             ):
         super().__init__(key, plural, label, doc)
+        self.is_person = False
         build_roles(self, roles)
 
     def __repr__(self) -> str:
@@ -86,8 +101,10 @@ class GroupEntity(Entity):
 
 
 def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
+    # Useless step kept to avoid changing the signature.
     entity.roles_description = roles
 
+    # Build roles & sub-roles.
     for role_description in entity.roles_description:
         role = Role(role_description, entity)
         setattr(entity, role.key.upper(), role)
