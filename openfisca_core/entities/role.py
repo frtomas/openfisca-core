@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from openfisca_core.types import HasRoles, SupportsRole
 
 
-@dataclass(init = False)
+@dataclass
 class Role:
     """Role of an :class:`.Entity` within a :class:`.GroupEntity`.
 
