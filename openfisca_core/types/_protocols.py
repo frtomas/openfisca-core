@@ -14,6 +14,8 @@ class HasRoles(Protocol):
     """
 
     roles: Sequence[SupportsRole]
+    roles_description: Sequence[Any]
+    flattened_roles: Sequence[SupportsRole]
 
 
 class HasVariables(Protocol):

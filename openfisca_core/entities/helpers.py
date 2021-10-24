@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Optional, Sequence, Union
 
-from openfisca_core.types import HasRoles, SupportsRole
+from openfisca_core.types import SupportsRole
 
 from .role import RoleLike
 from .entity import Entity
@@ -64,10 +64,7 @@ def build_entity(
         return Entity(key, plural, label, doc)
 
     if isinstance(roles, (list, tuple)):
-        entity: HasRoles
-        entity = GroupEntity(key, plural, label, doc, roles)
-
-        return entity
+        return GroupEntity(key, plural, label, doc, roles)
 
     raise ValueError(f"Invalid value '{roles}' for 'roles', must be a list.")
 

@@ -4,7 +4,7 @@ from typing import Sequence
 
 from dataclasses import dataclass
 
-from openfisca_core.types import HasRoles
+from openfisca_core.types import HasRoles, SupportsRole
 
 from openfisca_core.entities import Entity, Role
 
@@ -61,6 +61,11 @@ class GroupEntity(Entity):
 
     """
 
+    is_person: bool = False
+    roles: Sequence[SupportsRole] = ()
+    roles_description: Sequence[RoleLike] = ()
+    flattened_roles: Sequence[SupportsRole] = ()
+
     def __init__(
             self,
             key: str,
@@ -70,24 +75,31 @@ class GroupEntity(Entity):
             roles: Sequence[RoleLike],
             ):
         super().__init__(key, plural, label, doc)
-        self.roles_description = roles
-        self.roles = []
-        for role_description in roles:
-            role = Role(role_description, self)
-            setattr(self, role.key.upper(), role)
-            self.roles.append(role)
-            if role_description.get('subroles'):
-                role.subroles = []
-                for subrole_key in role_description['subroles']:
-                    subrole = Role({'key': subrole_key, 'max': 1}, self)
-                    setattr(self, subrole.key.upper(), subrole)
-                    role.subroles.append(subrole)
-                role.max = len(role.subroles)
-        self.flattened_roles = sum([role2.subroles or [role2] for role2 in self.roles], [])
-        self.is_person = False
+        build_roles(self, roles)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.key})"
 
     def __str__(self) -> str:
         return self.plural
+
+
+def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
+    entity.roles_description = roles
+
+    for role_description in entity.roles_description:
+        role = Role(role_description, entity)
+        setattr(entity, role.key.upper(), role)
+        entity.roles = (*entity.roles, role)
+
+        if role_description.get('subroles'):
+            role.subroles = []
+
+            for subrole_key in role_description['subroles']:
+                subrole = Role({'key': subrole_key, 'max': 1}, entity)
+                setattr(entity, subrole.key.upper(), subrole)
+                role.subroles.append(subrole)
+
+            role.max = len(role.subroles)
+
+    entity.flattened_roles = sum([role2.subroles or [role2] for role2 in entity.roles], [])
