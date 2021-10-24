@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from openfisca_core.types import HasRoles, SupportsRole
 
+from openfisca_core import commons
 from openfisca_core.entities import Entity, Role
 
 from .role import RoleLike
@@ -102,4 +103,4 @@ def build_roles(entity: HasRoles, roles: Sequence[RoleLike]) -> None:
 
             role.max = len(role.subroles)
 
-    entity.flattened_roles = sum([role2.subroles or [role2] for role2 in entity.roles], [])
+    entity.flattened_roles = tuple(commons.flatten([role2.subroles or [role2] for role2 in entity.roles]))
