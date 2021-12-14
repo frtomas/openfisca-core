@@ -1,11 +1,97 @@
 # Changelog
 
-## 35.6.0 [#1021](https://github.com/openfisca/openfisca-core/pull/1021)
+## 35.8.0 [#1021](https://github.com/openfisca/openfisca-core/pull/1021)
 
 #### New features
 
 - Introduce `neutralize_variables` option in YAML test files
   - A neutralized variable in a YAML test will return its default value when computed.
+
+### 35.7.4 [#1083](https://github.com/openfisca/openfisca-core/pull/1083)
+
+#### Technical changes
+
+- Add GitHub `pull-request` event as a trigger to GitHub Actions workflow
+
+### 35.7.3 [#1081](https://github.com/openfisca/openfisca-core/pull/1081)
+
+- Correct error message in case of mis-sized population 
+
+### 35.7.2 [#1057](https://github.com/openfisca/openfisca-core/pull/1057)
+
+#### Technical changes
+
+- Switch CI provider from CircleCI to GitHub Actions
+
+### 35.7.1 [#1075](https://github.com/openfisca/openfisca-core/pull/1075)
+
+#### Bug fix
+
+- Fix the collection of OpenFisca-Core tests coverage data
+    - Tests within `openfisca_core/*` were not run
+
+## 35.7.0 [#1070](https://github.com/openfisca/openfisca-core/pulls/1070)
+
+#### New Features
+
+- Add group population shortcut to containing groups entities
+
+## 35.6.0 [#1054](https://github.com/openfisca/openfisca-core/pull/1054)
+
+#### New Features
+
+- Introduce `openfisca_core.types`
+
+#### Documentation
+
+- Complete typing of the commons module
+
+#### Dependencies
+
+- `nptyping`
+  - To add backport-support for numpy typing
+  - Can be removed once lower-bound numpy version is 1.21+
+
+- `typing_extensions`
+  - To add backport-support for `typing.Protocol` and `typing.Literal`
+  - Can be removed once lower-bound python version is 3.8+
+
+### 35.5.5 [#1055](https://github.com/openfisca/openfisca-core/pull/1055)
+
+#### Documentation
+
+- Complete the documentation of the commons module
+
+### 35.5.4 [#1033](https://github.com/openfisca/openfisca-core/pull/1033)
+
+#### Bug Fixes
+
+- Fix doctests of the commons module
+
+#### Dependencies
+
+- `darglint`, `flake8-docstrings`, & `pylint`
+  - For automatic docstring linting & validation.
+
+### 35.5.3 [#1020](https://github.com/openfisca/openfisca-core/pull/1020)
+
+#### Technical changes
+
+- Run openfisca-core & country/extension template tests systematically
+
+### 35.5.2 [#1048](https://github.com/openfisca/openfisca-core/pull/1048)
+
+#### Bug fix
+
+- In _test_yaml.py_:
+  - Fix yaml tests loading —required for testing against the built version.
+
+### 35.5.1 [#1046](https://github.com/openfisca/openfisca-core/pull/1046)
+
+#### Non-technical changes
+
+- Reorganise `Makefile` into context files (install, test, publish…)
+- Colorise `make` tasks and improve messages printed to the user
 
 ## 35.5.0 [#1038](https://github.com/openfisca/openfisca-core/pull/1038)
 
