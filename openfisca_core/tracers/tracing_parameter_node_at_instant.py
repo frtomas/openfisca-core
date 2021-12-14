@@ -1,26 +1,23 @@
 from __future__ import annotations
 
 import typing
+from typing import Union
 
 import numpy
 
-from openfisca_core.parameters import (
-    config,
-    ParameterNodeAtInstant,
-    VectorialParameterNodeAtInstant,
-    )
+from openfisca_core import parameters
+
+from .. import tracers
+
+ParameterNode = Union[
+    parameters.VectorialParameterNodeAtInstant,
+    parameters.ParameterNodeAtInstant,
+    ]
 
 if typing.TYPE_CHECKING:
-    import numpy.typing
+    from numpy.typing import ArrayLike
 
-    from openfisca_core.tracers import FullTracer
-
-    ParameterNode = typing.Union[
-        VectorialParameterNodeAtInstant,
-        ParameterNodeAtInstant,
-        ]
-
-    Child = typing.Union[ParameterNode, numpy.typing.ArrayLike]
+    Child = Union[ParameterNode, ArrayLike]
 
 
 class TracingParameterNodeAtInstant:
@@ -28,7 +25,7 @@ class TracingParameterNodeAtInstant:
     def __init__(
             self,
             parameter_node_at_instant: ParameterNode,
-            tracer: FullTracer,
+            tracer: tracers.FullTracer,
             ) -> None:
         self.parameter_node_at_instant = parameter_node_at_instant
         self.tracer = tracer
@@ -36,34 +33,34 @@ class TracingParameterNodeAtInstant:
     def __getattr__(
             self,
             key: str,
-            ) -> typing.Union[TracingParameterNodeAtInstant, Child]:
+            ) -> Union[TracingParameterNodeAtInstant, Child]:
         child = getattr(self.parameter_node_at_instant, key)
         return self.get_traced_child(child, key)
 
     def __getitem__(
             self,
-            key: typing.Union[str, numpy.typing.ArrayLike],
-            ) -> typing.Union[TracingParameterNodeAtInstant, Child]:
+            key: Union[str, ArrayLike],
+            ) -> Union[TracingParameterNodeAtInstant, Child]:
         child = self.parameter_node_at_instant[key]
         return self.get_traced_child(child, key)
 
     def get_traced_child(
             self,
             child: Child,
-            key: typing.Union[str, numpy.typing.ArrayLike],
-            ) -> typing.Union[TracingParameterNodeAtInstant, Child]:
+            key: Union[str, ArrayLike],
+            ) -> Union[TracingParameterNodeAtInstant, Child]:
         period = self.parameter_node_at_instant._instant_str
 
         if isinstance(
                 child,
-                (ParameterNodeAtInstant, VectorialParameterNodeAtInstant),
+                (parameters.ParameterNodeAtInstant, parameters.VectorialParameterNodeAtInstant),
                 ):
             return TracingParameterNodeAtInstant(child, self.tracer)
 
         if not isinstance(key, str) or \
             isinstance(
                 self.parameter_node_at_instant,
-                VectorialParameterNodeAtInstant,
+                parameters.VectorialParameterNodeAtInstant,
                 ):
             # In case of vectorization, we keep the parent node name as, for
             # instance, rate[status].zone1 is best described as the value of
@@ -73,7 +70,7 @@ class TracingParameterNodeAtInstant:
         else:
             name = '.'.join([self.parameter_node_at_instant._name, key])
 
-        if isinstance(child, (numpy.ndarray,) + config.ALLOWED_PARAM_TYPES):
+        if isinstance(child, (numpy.ndarray,) + parameters.ALLOWED_PARAM_TYPES):
             self.tracer.record_parameter_access(name, period, child)
 
         return child

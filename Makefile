@@ -1,34 +1,35 @@
+include openfisca_tasks/install.mk
+include openfisca_tasks/lint.mk
+include openfisca_tasks/publish.mk
+include openfisca_tasks/serve.mk
+include openfisca_tasks/test_code.mk
+include openfisca_tasks/test_doc.mk
+
+## To share info with the user, but no action is needed.
+print_info = $$(tput setaf 6)[i]$$(tput sgr0)
+
+## To warn the user of something, but no action is needed.
+print_warn = $$(tput setaf 3)[!]$$(tput sgr0)
+
+## To let the user know where we are in the task pipeline.
+print_work = $$(tput setaf 5)[⚙]$$(tput sgr0)
+
+## To let the user know the task in progress succeded.
+## The `$1` is a function argument, passed from a task (usually the task name).
+print_pass = echo $$(tput setaf 2)[✓]$$(tput sgr0) $$(tput setaf 8)$1$$(tput sgr0)$$(tput setaf 2)passed$$(tput sgr0) $$(tput setaf 1)❤$$(tput sgr0)
+
+## Similar to `print_work`, but this will read the comments above a task, and
+## print them to the user at the start of each task. The `$1` is a function
+## argument.
+print_help = sed -n "/^$1/ { x ; p ; } ; s/\#\#/\r$(print_work)/ ; s/\./…/ ; x" ${MAKEFILE_LIST}
+
+## Same as `make`.
+.DEFAULT_GOAL := all
+
+## Same as `make test`.
 all: test
+	@$(call print_pass,$@:)
 
-uninstall:
-	pip freeze | grep -v "^-e" | xargs pip uninstall -y
-
-install:
-	pip install --upgrade pip twine wheel
-	pip install --editable .[dev] --upgrade --use-deprecated=legacy-resolver
-
-clean:
-	rm -rf build dist
-	find . -name '*.pyc' -exec rm \{\} \;
-
-check-syntax-errors:
-	python -m compileall -q .
-
-check-types:
-	mypy openfisca_core && mypy openfisca_web_api
-
-check-style:
-	@# Do not analyse .gitignored files.
-	@# `make` needs `$$` to output `$`. Ref: http://stackoverflow.com/questions/2382764.
-	flake8 `git ls-files | grep "\.py$$"`
-
-format-style:
-	@# Do not analyse .gitignored files.
-	@# `make` needs `$$` to output `$`. Ref: http://stackoverflow.com/questions/2382764.
-	autopep8 `git ls-files | grep "\.py$$"`
-
-test: clean check-syntax-errors check-style check-types
-	env PYTEST_ADDOPTS="$$PYTEST_ADDOPTS --cov=openfisca_core" pytest
-
-api:
-	openfisca serve --country-package openfisca_country_template --extensions openfisca_extension_template
+## Run all lints and tests.
+test: clean lint test-code
+	@$(call print_pass,$@:)

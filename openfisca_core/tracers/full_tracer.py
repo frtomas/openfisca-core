@@ -2,32 +2,26 @@ from __future__ import annotations
 
 import time
 import typing
+from typing import Dict, Iterator, List, Optional, Union
 
-from openfisca_core.tracers import (
-    ComputationLog,
-    FlatTrace,
-    PerformanceLog,
-    SimpleTracer,
-    TraceNode,
-    )
+from .. import tracers
 
 if typing.TYPE_CHECKING:
-    import numpy
-    import numpy.typing
+    from numpy.typing import ArrayLike
 
     from openfisca_core.periods import Period
 
-    Stack = typing.List[typing.Dict[str, typing.Union[str, Period]]]
+    Stack = List[Dict[str, Union[str, Period]]]
 
 
 class FullTracer:
 
-    _simple_tracer: SimpleTracer
+    _simple_tracer: tracers.SimpleTracer
     _trees: list
-    _current_node: typing.Optional[TraceNode]
+    _current_node: Optional[tracers.TraceNode]
 
     def __init__(self) -> None:
-        self._simple_tracer = SimpleTracer()
+        self._simple_tracer = tracers.SimpleTracer()
         self._trees = []
         self._current_node = None
 
@@ -45,7 +39,7 @@ class FullTracer:
             variable: str,
             period: Period,
             ) -> None:
-        new_node = TraceNode(
+        new_node = tracers.TraceNode(
             name = variable,
             period = period,
             parent = self._current_node,
@@ -63,17 +57,17 @@ class FullTracer:
             self,
             parameter: str,
             period: Period,
-            value: numpy.typing.ArrayLike,
+            value: ArrayLike,
             ) -> None:
 
         if self._current_node is not None:
             self._current_node.parameters.append(
-                TraceNode(name = parameter, period = period, value = value),
+                tracers.TraceNode(name = parameter, period = period, value = value),
                 )
 
     def _record_start_time(
             self,
-            time_in_s: typing.Optional[float] = None,
+            time_in_s: Optional[float] = None,
             ) -> None:
         if time_in_s is None:
             time_in_s = self._get_time_in_sec()
@@ -81,7 +75,7 @@ class FullTracer:
         if self._current_node is not None:
             self._current_node.start = time_in_s
 
-    def record_calculation_result(self, value: numpy.typing.ArrayLike) -> None:
+    def record_calculation_result(self, value: ArrayLike) -> None:
         if self._current_node is not None:
             self._current_node.value = value
 
@@ -92,7 +86,7 @@ class FullTracer:
 
     def _record_end_time(
             self,
-            time_in_s: typing.Optional[float] = None,
+            time_in_s: Optional[float] = None,
             ) -> None:
         if time_in_s is None:
             time_in_s = self._get_time_in_sec()
@@ -109,20 +103,20 @@ class FullTracer:
         return self._simple_tracer.stack
 
     @property
-    def trees(self) -> typing.List[TraceNode]:
+    def trees(self) -> List[tracers.TraceNode]:
         return self._trees
 
     @property
-    def computation_log(self) -> ComputationLog:
-        return ComputationLog(self)
+    def computation_log(self) -> tracers.ComputationLog:
+        return tracers.ComputationLog(self)
 
     @property
-    def performance_log(self) -> PerformanceLog:
-        return PerformanceLog(self)
+    def performance_log(self) -> tracers.PerformanceLog:
+        return tracers.PerformanceLog(self)
 
     @property
-    def flat_trace(self) -> FlatTrace:
-        return FlatTrace(self)
+    def flat_trace(self) -> tracers.FlatTrace:
+        return tracers.FlatTrace(self)
 
     def _get_time_in_sec(self) -> float:
         return time.time_ns() / (10**9)
@@ -136,7 +130,7 @@ class FullTracer:
     def generate_performance_tables(self, dir_path: str) -> None:
         self.performance_log.generate_performance_tables(dir_path)
 
-    def _get_nb_requests(self, tree: TraceNode, variable: str) -> int:
+    def _get_nb_requests(self, tree: tracers.TraceNode, variable: str) -> int:
         tree_call = tree.name == variable
         children_calls = sum(
             self._get_nb_requests(child, variable)
@@ -159,7 +153,7 @@ class FullTracer:
     def get_serialized_flat_trace(self) -> dict:
         return self.flat_trace.get_serialized_trace()
 
-    def browse_trace(self) -> typing.Iterator[TraceNode]:
+    def browse_trace(self) -> Iterator[tracers.TraceNode]:
 
         def _browse_node(node):
             yield node

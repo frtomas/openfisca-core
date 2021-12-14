@@ -4,7 +4,6 @@
 [![Twitter](https://img.shields.io/badge/twitter-follow%20us!-9cf.svg?style=flat)](https://twitter.com/intent/follow?screen_name=openfisca)
 [![Slack](https://img.shields.io/badge/slack-join%20us!-blueviolet.svg?style=flat)](mailto:contact%40openfisca.org?subject=Join%20you%20on%20Slack%20%7C%20Nous%20rejoindre%20sur%20Slack&body=%5BEnglish%20version%20below%5D%0A%0ABonjour%2C%0A%0AVotre%C2%A0pr%C3%A9sence%C2%A0ici%C2%A0nous%C2%A0ravit%C2%A0!%20%F0%9F%98%83%0A%0ARacontez-nous%20un%20peu%20de%20vous%2C%20et%20du%20pourquoi%20de%20votre%20int%C3%A9r%C3%AAt%20de%20rejoindre%20la%20communaut%C3%A9%20OpenFisca%20sur%20Slack.%0A%0AAh%C2%A0!%20Et%20si%20vous%20pouviez%20remplir%20ce%20petit%20questionnaire%2C%20%C3%A7a%20serait%20encore%20mieux%C2%A0!%0Ahttps%3A%2F%2Fgoo.gl%2Fforms%2F45M0VR1TYKD1RGzX2%0A%0AN%E2%80%99oubliez%20pas%20de%20nous%20envoyer%20cet%20email%C2%A0!%20Sinon%2C%20on%20ne%20pourra%20pas%20vous%20contacter%20ni%20vous%20inviter%20sur%20Slack.%0A%0AAmiti%C3%A9%2C%0AL%E2%80%99%C3%A9quipe%20OpenFisca%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%20ENGLISH%20VERSION%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0AHi%2C%20%0A%0AWe're%20glad%20to%20see%20you%20here!%20%F0%9F%98%83%0A%0APlease%20tell%20us%20a%20bit%20about%20you%20and%20why%20you%20want%20to%20join%20the%20OpenFisca%20community%20on%20Slack.%0A%0AAlso%2C%20if%20you%20can%20fill%20out%20this%20short%20survey%2C%20even%20better!%0Ahttps%3A%2F%2Fgoo.gl%2Fforms%2FsOg8K1abhhm441LG2.%0A%0ADon't%20forget%20to%20send%20us%20this%20email!%20Otherwise%20we%20won't%20be%20able%20to%20contact%20you%20back%2C%20nor%20invite%20you%20on%20Slack.%0A%0ACheers%2C%0AThe%20OpenFisca%20Team)
 
-[![CircleCI](https://img.shields.io/circleci/project/github/openfisca/openfisca-core/master.svg?style=flat)](https://circleci.com/gh/openfisca/openfisca-core)
 [![Coveralls](https://img.shields.io/coveralls/github/openfisca/openfisca-core/master.svg?style=flat)](https://coveralls.io/github/openfisca/openfisca-core?branch=master)
 [![Python](https://img.shields.io/pypi/pyversions/openfisca-core.svg)](https://pypi.python.org/pypi/openfisca-core)
 [![PyPi](https://img.shields.io/pypi/v/openfisca-core.svg?style=flat)](https://pypi.python.org/pypi/openfisca-core)
@@ -17,6 +16,8 @@ This package contains the core features of OpenFisca, which are meant to be used
 
 OpenFisca runs on Python 3.7. More recent versions should work, but are not tested.
 
+OpenFisca also relies strongly on NumPy. Last four minor versions should work, but only latest/stable is tested.
+
 ## Installation
 
 If you're developing your own country package, you don't need to explicitly install OpenFisca-Core. It just needs to appear [in your package dependencies](https://github.com/openfisca/openfisca-france/blob/18.2.1/setup.py#L53).
@@ -26,6 +27,9 @@ If you want to contribute to OpenFisca-Core itself, welcome! To install it local
 ```bash
 git clone https://github.com/openfisca/openfisca-core.git
 cd openfisca-core
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
 pip install --editable .[dev] --use-deprecated=legacy-resolver
 ```
 
@@ -47,6 +51,18 @@ To run a single test:
 
 ```sh
 pytest tests/core/test_parameters.py -k test_parameter_for_period
+```
+
+## Types
+
+This repository relies on MyPy for optional dynamic & static type checking.
+
+As NumPy introduced the `typing` module in 1.20.0, to ensure type hints do not break the code at runtime, we run the checker against the last four minor NumPy versions.
+
+Type checking is already run with `make test`. To run the type checker alone:
+
+```sh
+make check-types
 ```
 
 ## Style
@@ -78,6 +94,76 @@ tee -a .git/hooks/pre-commit << END
 exec make format-style
 END
 ```
+
+## Documentation
+
+Yet however OpenFisca does not follow a common convention for docstrings, our current toolchain allows to check whether documentation builds correctly and to update it automatically with each contribution to this repository.
+
+In the meantime, please take a look at our [contributing guidelines](CONTRIBUTING.md) for some general tips on how to document your contributions, and at our official documentation's [repository](https://github.com/openfisca/openfisca-doc/blob/master/README.md) to in case you want to know how to build it by yourself —and improve it!
+
+### To verify that the documentation still builds correctly
+
+You can run:
+
+```sh
+make test-doc
+```
+
+### If it doesn't, or if the doc is already broken.
+
+Here's how you can fix it:
+
+1. Clone the documentation, if not yet done:
+
+```
+make test-doc-checkout
+```
+
+2. Install the documentation's dependencies, if not yet done:
+
+```
+make test-doc-install
+```
+
+3. Create a branch, both in core and in the doc, to correct the problems:
+
+```
+git checkout -b fix-doc
+sh -c "cd doc && git checkout -b `git branch --show-current`"
+```
+
+4. Fix the offending problems —they could be in core, in the doc, or in both.
+
+You can test-drive your fixes by checking that each change works as expected:
+
+```
+make test-doc-build branch=`git branch --show-current`
+```
+
+5. Commit at each step, so you don't accidentally lose your progress:
+
+```
+git add -A && git commit -m "Fix outdated argument for Entity"
+sh -c "cd doc && git add -A && git commit -m \"Fix outdated argument for Entity\""
+```
+
+6. Once you're done, push your changes and cleanup:
+
+```
+git push origin `git branch --show-current`
+sh -c "cd doc && git push origin `git branch --show-current`"
+rm -rf doc
+```
+
+7. Finally, open a pull request both in [core](https://github.com/openfisca/openfisca-core/compare/master...fix-doc) and in the [doc](https://github.com/openfisca/openfisca-doc/compare/master...fix-doc).
+
+Continuous integration will automatically try to build the documentation from the same branch in both core and the doc (in our example "fix-doc") so we can integrate first our changes to Core, and then our changes to the doc.
+
+If no changes were needed to the doc, then your changes to core will be verified against the production version of the doc.
+
+If your changes concern only the doc, please take a look at the doc's [README](https://github.com/openfisca/openfisca-doc/blob/master/README.md).
+
+That's it! 🙌
 
 ## Serving the API
 

@@ -1,6 +1,160 @@
 # Changelog
 
+### 35.7.4 [#1083](https://github.com/openfisca/openfisca-core/pull/1083)
+
+#### Technical changes
+
+- Add GitHub `pull-request` event as a trigger to GitHub Actions workflow
+
+### 35.7.3 [#1081](https://github.com/openfisca/openfisca-core/pull/1081)
+
+- Correct error message in case of mis-sized population 
+
+### 35.7.2 [#1057](https://github.com/openfisca/openfisca-core/pull/1057)
+
+#### Technical changes
+
+- Switch CI provider from CircleCI to GitHub Actions
+
+### 35.7.1 [#1075](https://github.com/openfisca/openfisca-core/pull/1075)
+
+#### Bug fix
+
+- Fix the collection of OpenFisca-Core tests coverage data
+    - Tests within `openfisca_core/*` were not run
+
+## 35.7.0 [#1070](https://github.com/openfisca/openfisca-core/pulls/1070)
+
+#### New Features
+
+- Add group population shortcut to containing groups entities
+
+## 35.6.0 [#1054](https://github.com/openfisca/openfisca-core/pull/1054)
+
+#### New Features
+
+- Introduce `openfisca_core.types`
+
+#### Documentation
+
+- Complete typing of the commons module
+
+#### Dependencies
+
+- `nptyping`
+  - To add backport-support for numpy typing
+  - Can be removed once lower-bound numpy version is 1.21+
+
+- `typing_extensions`
+  - To add backport-support for `typing.Protocol` and `typing.Literal`
+  - Can be removed once lower-bound python version is 3.8+
+
+### 35.5.5 [#1055](https://github.com/openfisca/openfisca-core/pull/1055)
+
+#### Documentation
+
+- Complete the documentation of the commons module
+
+### 35.5.4 [#1033](https://github.com/openfisca/openfisca-core/pull/1033)
+
+#### Bug Fixes
+
+- Fix doctests of the commons module
+
+#### Dependencies
+
+- `darglint`, `flake8-docstrings`, & `pylint`
+  - For automatic docstring linting & validation.
+
+### 35.5.3 [#1020](https://github.com/openfisca/openfisca-core/pull/1020)
+
+#### Technical changes
+
+- Run openfisca-core & country/extension template tests systematically
+
+### 35.5.2 [#1048](https://github.com/openfisca/openfisca-core/pull/1048)
+
+#### Bug fix
+
+- In _test_yaml.py_:
+  - Fix yaml tests loading —required for testing against the built version.
+
+### 35.5.1 [#1046](https://github.com/openfisca/openfisca-core/pull/1046)
+
+#### Non-technical changes
+
+- Reorganise `Makefile` into context files (install, test, publish…)
+- Colorise `make` tasks and improve messages printed to the user
+
+## 35.5.0 [#1038](https://github.com/openfisca/openfisca-core/pull/1038)
+
+#### New Features
+
+- Introduce `openfisca_core.variables.typing`
+  - Documents the signature of formulas
+  - Note: as formulas are generated dynamically, documenting them is tricky
+
+#### Bug Fixes
+
+- Fix the official doc
+  - Corrects malformed docstrings
+  - Fix missing and/ou outdated references
+
+#### Technical Changes
+
+- Add tasks to automatically validate that changes do not break the documentation
+
+#### Documentation
+
+- Add steps to follow in case the documentation is broken
+- Add general documenting guidelines in CONTRIBUTING.md
+
+### 35.4.2 [#1026](https://github.com/openfisca/openfisca-core/pull/1026)
+
+#### Bug fix
+
+- [Web API] Handle a period mismatch error
+  - Period mismatch error was not being handled by the API
+  - Since it's caused by the user, a 400 (bad request error) is to be expected
+  - However, since it was not being handled, a 500 (internal server error) was being given instead
+
+### 35.4.1 [#1007](https://github.com/openfisca/openfisca-core/pull/1007)
+
+#### Bug fix
+
+- Properly check for date validity in parameters.
+  - Date validity was being checked only partially, allowing parameters with illegal dates such as "2015-13-32".
+  - The changes introduced fix this error and prevent the user when a parameter date is illegal.
+
+## 35.4.0 [#1010](https://github.com/openfisca/openfisca-core/pull/1010)
+
+#### Technical changes
+
+- Update dependencies (_as in 35.3.7_).
+  - Extend NumPy compatibility to v1.20 to support M1 processors.
+
+- Make NumPy's type-checking compatible with 1.17.0+
+  - NumPy introduced their `typing` module since 1.20.0
+  - Previous type hints relying on `annotations` will henceforward no longer work
+  - This changes ensure that type hints are always legal for the last four minor NumPy versions
+
+### 35.3.8 [#1014](https://github.com/openfisca/openfisca-core/pull/1014)
+
+#### Bug fix
+
+- Drop latest NumPy supported version to 1.18.x
+  - OpenFisca relies on MyPy for optional duck & static type checking
+  - When libraries do not implement their own types, MyPy provides stubs, or type sheds
+  - Thanks to `__future__.annotations`, those stubs or type sheds are casted to `typing.Any`
+  - Since 1.20.x, NumPy now provides their own type definitions
+  - The introduction of NumPy 1.20.x in #990 caused one major problem: 
+    - It is general practice to do not import at runtime modules only used for typing purposes, thanks to the `typing.TYPE_CHEKING` variable
+    - The new `numpy.typing` module was being imported at runtime, rendering OpenFisca unusable to all users depending on previous versions of NumPy (1.20.x-)
+  - These changes revert #990 and solve #1009 and #1012
+
 ### 35.3.7 [#990](https://github.com/openfisca/openfisca-core/pull/990)
+
+_Note: this version has been unpublished due to an issue introduced by NumPy upgrade. Please use 34.3.8 or a more recent version._
 
 #### Technical changes
 
