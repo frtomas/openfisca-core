@@ -1,5 +1,10 @@
 # Changelog
 
+### 35.7.9 [#1105](https://github.com/openfisca/openfisca-core/pull/1105)
+
+#### Technical changes
+
+- Add publish to Anaconda in CI. See file .conda/README.md.
 ### 35.7.8 [#1086](https://github.com/openfisca/openfisca-core/pull/1086)
 
 #### Technical changes
