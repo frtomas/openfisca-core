@@ -5,6 +5,7 @@
 #### Technical changes
 
 - Add publish openfisca-core library to Anaconda in CI. See file .conda/README.md.
+
 ### 35.7.8 [#1086](https://github.com/openfisca/openfisca-core/pull/1086)
 
 #### Technical changes
