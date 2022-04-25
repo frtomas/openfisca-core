@@ -5,6 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     env:
       TERM: xterm-256color  # To colorize output of make tasks.
     steps:
@@ -13,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -34,6 +39,11 @@ jobs:
 
   test-core:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +53,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -59,6 +69,11 @@ jobs:
 
   test-country-template:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -67,7 +82,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -79,6 +94,11 @@ jobs:
 
   test-extension-template:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -87,7 +107,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -99,6 +119,11 @@ jobs:
 
   check-numpy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -107,7 +132,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -119,6 +144,11 @@ jobs:
 
   test-docs:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -129,7 +159,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.12
+          python-version: ${{ matrix.python-version }}
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
