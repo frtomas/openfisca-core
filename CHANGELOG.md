@@ -1,5 +1,14 @@
 # Changelog
 
+### 36.0.0
+
+#### Dependencies
+
+- Support Python 3.8
+- Drop support for `numpy` < 1.17, which is incompatible with Python 3.8
+- Support `numpy` v1.21
+  - The only documented incompatibility is the [removal of Polybase](https://numpy.org/doc/stable/release/1.21.0-notes.html#remove-deprecated-polybase-and-unused-polyerror-and-polydomainerror), which raised deprecation warnings since 1.9
+
 ### 35.8.0 [#1114](https://github.com/openfisca/openfisca-core/pull/1114)
 
 #### New Features

@@ -16,7 +16,7 @@ This package contains the core features of OpenFisca, which are meant to be used
 
 OpenFisca runs on Python 3.8 and 3.7. More recent versions should work, but are not tested.
 
-OpenFisca also relies strongly on NumPy. Last four minor versions should work, but only latest/stable is tested.
+OpenFisca also relies strongly on NumPy. The last four minor versions are tested.
 
 ## Installation
 
