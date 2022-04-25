@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     env:
       TERM: xterm-256color  # To colorize output of make tasks.
     steps:
@@ -42,8 +42,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,8 +72,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -97,8 +97,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -122,8 +122,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -147,8 +147,8 @@ jobs:
     strategy:
       matrix:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
-          - 3.7.13
-          - 3.8.13
+          - 3.7.12
+          - 3.8.12
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -189,7 +189,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8.13
+          python-version: 3.8.12
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
@@ -209,7 +209,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8.13
+          python-version: 3.8.12
       - name: Check version number has been properly updated
         run: "${GITHUB_WORKSPACE}/.github/is-version-number-acceptable.sh"
 
@@ -229,7 +229,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8.13
+          python-version: 3.8.12
       - id: stop-early
         run: if "${GITHUB_WORKSPACE}/.github/has-functional-changes.sh" ; then echo "::set-output name=status::success" ; fi # The `check-for-functional-changes` job should always succeed regardless of the `has-functional-changes` script's exit code. Consequently, we do not use that exit code to trigger deploy, but rather a dedicated output variable `status`, to avoid a job failure if the exit code is different from 0. Conversely, if the job fails the entire workflow would be marked as `failed` which is disturbing for contributors.
 
@@ -248,7 +248,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8.13
+          python-version: 3.8.12
       - name: Cache build
         id: restore-build
         uses: actions/cache@v2
