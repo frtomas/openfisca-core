@@ -26,7 +26,7 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: build-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ github.sha }}
           restore-keys: | # in case of a cache miss (systematically unless the same commit is built repeatedly), the keys below will be used to restore dependencies from previous builds, and the cache will be stored at the end of the job, making up-to-date dependencies available for all jobs of the workflow; see more at https://docs.github.com/en/actions/advanced-guides/caching-dependencies-to-speed-up-workflows#example-using-the-cache-action
-            build-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+            build-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-
       - name: Build package
         run: make build
       - name: Cache release
