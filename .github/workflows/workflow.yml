@@ -123,6 +123,11 @@ jobs:
         python-version:  # Patch version must be specified to avoid any cache confusion, since the cache key depends on the full Python version. If left unspecified, different patch versions could be allocated between jobs, and any such difference would lead to a cache not found error.
           - 3.7.12
           - 3.8.12
+        numpy-version:
+          - 1.21
+          - 1.20
+          - 1.19
+          - 1.18
     needs: [ build ]
     env:
       TERM: xterm-256color
@@ -139,7 +144,7 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: build-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ github.sha }}
       - name: Check NumPy typing against latest 4 minor versions
-        run: for i in {0..3}; do make check-types; VERSION=$(${GITHUB_WORKSPACE}/.github/get-numpy-version.py prev) && pip install numpy==$VERSION; done
+        run: pip install numpy==${numpy-version}; make check-types
 
   test-docs:
     runs-on: ubuntu-latest
