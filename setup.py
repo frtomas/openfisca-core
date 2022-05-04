@@ -16,11 +16,12 @@ general_requirements = [
     'PyYAML >= 3.10',
     'sortedcontainers == 2.1.0',
     'numexpr == 2.6.9',
+    'markupsafe == 2.0.1',  # While flask revision < 2
+    'flask == 1.1.4',
+    'flask-cors == 3.0.10',
     ]
 
 api_requirements = [
-    'flask == 1.1.1',
-    'flask-cors == 3.0.7',
     'gunicorn >= 19.7.1',
     ]
 
