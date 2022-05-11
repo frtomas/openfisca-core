@@ -18,11 +18,11 @@ general_requirements = [
     'numexpr == 2.6.9',
     'markupsafe == 2.0.1',  # While flask revision < 2
     'flask == 1.1.4',
-    'flask-cors == 3.0.10',
+    'flask-cors == 3.0.10'
     ]
 
 api_requirements = [
-    'gunicorn >= 19.7.1',
+    'gunicorn >= 19.7.1'
     ]
 
 dev_requirements = [
